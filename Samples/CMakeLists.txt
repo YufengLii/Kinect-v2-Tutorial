@@ -22,3 +22,15 @@ add_executable( camera_calibration camera_calibration.cpp )
 add_custom_command( TARGET camera_calibration POST_BUILD ${KinectSDK2_COMMANDS} )
 set_property( DIRECTORY PROPERTY VS_STARTUP_PROJECT "camera_calibration" )
 target_link_libraries( camera_calibration ${OpenCV_LIBS} ${KinectSDK2_LIBRARIES} )
+
+# 可按下面的格式添加自己的源文件
+add_executable( fast_capture_100_frames fast_capture_100_frames.cpp )
+add_custom_command( TARGET fast_capture_100_frames POST_BUILD ${KinectSDK2_COMMANDS} )
+set_property( DIRECTORY PROPERTY VS_STARTUP_PROJECT "fast_capture_100_frames" )
+target_link_libraries( fast_capture_100_frames ${OpenCV_LIBS} ${KinectSDK2_LIBRARIES} )
+
+# 可按下面的格式添加自己的源文件
+add_executable( generate_pointcloud_from_depthimage generate_pointcloud_from_depthimage.cpp )
+add_custom_command( TARGET generate_pointcloud_from_depthimage POST_BUILD ${KinectSDK2_COMMANDS} )
+set_property( DIRECTORY PROPERTY VS_STARTUP_PROJECT "generate_pointcloud_from_depthimage" )
+target_link_libraries( generate_pointcloud_from_depthimage ${OpenCV_LIBS} ${KinectSDK2_LIBRARIES} )
