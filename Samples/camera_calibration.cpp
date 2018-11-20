@@ -103,7 +103,7 @@ int main()
 	while (true)
 	{
 		// 设置存储文件名
-		char infrared_image_name[200] = {'\0'};
+		char infrared_image_name[200] = { '\0' };
 		char rgb_image_name[200] = { '\0' };
 
 		sprintf(infrared_image_name, "%s%d%s", ".\\calibration_images\\depth_", frame_count, ".tif");
@@ -139,8 +139,8 @@ int main()
 			hr = myInfraredFrame->CopyFrameDataToArray(424 * 512, reinterpret_cast<UINT16*>(i_ir.data));
 
 		// 显示 该帧 彩色图 红外图
-		cvNamedWindow("color image!",0);
-		cvResizeWindow("color image!", i_rgb.cols/2, i_rgb.rows/2);
+		cvNamedWindow("color image!", 0);
+		cvResizeWindow("color image!", i_rgb.cols / 2, i_rgb.rows / 2);
 		cvMoveWindow("color image!", 0, 200);
 
 		cvNamedWindow("infrare image!");
@@ -148,9 +148,12 @@ int main()
 
 		imshow("color image!", i_rgb);
 		imshow("infrare image!", i_ir);
+		 
 
-		cout << "是否保存当前帧（y/n）?" << endl;
-		cout << "按ESC键结束采集并退出。" << endl;
+		//cout << "是否保存当前帧(y n )" << endl;
+		//cout << "按ESC结束采集并退出" << endl;
+		
+		
 
 		char keycommand = '0';
 		keycommand = waitKey();

@@ -180,7 +180,9 @@ int main()
 
 		sprintf(infrared_image_name, "%s%d%s", ".\\captured_images\\infrared_", frame_num, ".tif");
 		sprintf(rgb_image_name, "%s%d%s", ".\\captured_images\\rgb_", frame_num, ".jpg");
-		sprintf(depth_image_name, "%s%d%s", ".\\captured_images\\depth_", frame_num, ".png");
+		sprintf(depth_image_name, "%s%d%s", ".\\captured_images\\depth_", frame_num, ".PNG");
+
+		//cout << kienct100frame[frame_num - 1].depth.at<UINT16>(100,100) << endl;
 
 		imwrite(rgb_image_name, kienct100frame[frame_num - 1].color);
 		imwrite(infrared_image_name, kienct100frame[frame_num - 1].ir);
