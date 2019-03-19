@@ -6,6 +6,13 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
+
+// 本程序使用Kinect v2传感器采集并保存彩色图与深度图，彩色图分辨率为1920*1080，
+// 深度图分辨率为512*424，并使用Kinect SDK得到该帧点云数据并保存。
+// 使用者可以根据Kinect相机内参，从得到的深度图与彩色图中自己生成点云数据。
+
+// 主要涉及Kinect传感器的打开、采集与深度图彩色图映射。
+
 using namespace cv;
 using namespace std;
 
@@ -70,8 +77,8 @@ int main()
 	IDepthFrame* myDepthFrame = nullptr;
 
 	UINT nColorBufferSize = 1920 * 1080 * 4;
-	Mat i_rgb(1080, 1920, CV_8UC4);
-	Mat i_depth(424, 512, CV_16UC1);
+	Mat i_rgb = Mat::zeros (1080, 1920, CV_8UC4);
+	Mat i_depth = Mat::zeros(1080, 1920, CV_16UC1);
 
 	unsigned int sz;
 	unsigned short* buf;
@@ -104,7 +111,6 @@ int main()
 
 			}
 			if (SUCCEEDED(hr)) {
-				//hr = myDepthFrame->CopyFrameDataToArray(424 * 512, reinterpret_cast<UINT16*>(i_depth.data));
 				myDepthFrame->AccessUnderlyingBuffer(&sz, &buf);
 			}
 
@@ -115,32 +121,40 @@ int main()
 	mapper->MapDepthFrameToCameraSpace(512 * 424, buf, 512 * 424, depth2xyz);
 	mapper->MapDepthFrameToColorSpace(512 * 424, buf, 512 * 424, depth2rgb);
 
-	for (int i = 0; i < 512 * 424; i++) {
-		ColorSpacePoint p = depth2rgb[i];
-		CameraSpacePoint p_xyz = depth2xyz[i];
-		PointT p_xyzrgb;
-		
-		// Check if color pixel coordinates are in bounds
-		if (p.X < 0 || p.Y < 0 || p.X > 1920 || p.Y > 1080) {
-			continue;
-		}
-		else {
-			//int idx = (int)p.X + 1080 * (int)p.Y;
-			Vec4b p_rgba =  i_rgb.at<Vec4b>(p.Y, p.X);
 
-			
-			p_xyzrgb.b = p_rgba[0];
-			p_xyzrgb.g = p_rgba[1];
-			p_xyzrgb.r = p_rgba[2];
+	for (int i = 0; i < 424; i++){
+		for (int j = 0; j < 512; j++) {
 
-			p_xyzrgb.x = p_xyz.X;
-			p_xyzrgb.y = p_xyz.Y;
-			p_xyzrgb.z = p_xyz.Z;
+			ColorSpacePoint p = depth2rgb[i*512 + j];
+			CameraSpacePoint p_xyz = depth2xyz[i * 512 + j];
+			PointT p_xyzrgb;
+
+			// Check if color pixel coordinates are in bounds
+			if (p.X < 0 || p.Y < 0 || p.X > 1920 || p.Y > 1080) {
+				continue;
+			}
+			else {
+
+				i_depth.ptr<uint16_t>((int)p.Y)[(int)p.X] = buf[i * 512 + j];
+				Vec4b p_rgba = i_rgb.at<Vec4b>(p.Y, p.X);
+
+				p_xyzrgb.b = p_rgba[0];
+				p_xyzrgb.g = p_rgba[1];
+				p_xyzrgb.r = p_rgba[2];
+
+
+				p_xyzrgb.x = -p_xyz.X;
+				p_xyzrgb.y = p_xyz.Y;
+				p_xyzrgb.z = p_xyz.Z;
+			}
+			cloud->push_back(p_xyzrgb);
+
 		}
-		cloud->push_back(p_xyzrgb);
 	}
-		
-		
+
+	imwrite("rgb.jpg", i_rgb);
+	imwrite("depth.png", i_depth);
+
 	cloud->height = 1;
 	cloud->width = cloud->points.size();
 	std::cout << "point cloud size = " << cloud->points.size() << endl;
@@ -154,7 +168,6 @@ int main()
 	SafeRelease(myColorFrameReference);
 	SafeRelease(myDepthFrameReference);
 	SafeRelease(myMultiFrame);
-		
 		
 	cv::destroyAllWindows();
 	myKinectSensor->Close();
