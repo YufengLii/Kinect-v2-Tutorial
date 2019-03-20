@@ -21,7 +21,7 @@
 ### visual studio
   1. visual studio版本需要等于或高于目标平台。即，你计划用vc14 x64的编译配置，那么vs版本不能低于2015版；
   2. opencv、pcl库的编译选项一定需要和目标编译选项一致。建议下载预编译版本的OPENCV与PCL，注意下载时，选择与目标平台相同的预编译版本；如`PCL-1.8.1-AllInOne-msvc2017-win64.exe`与`opencv-3.4.0-vc14_vc15.exe`均为`vc15 x64`的配置，在用CMAKE编译自己代码时，平台选择应相同。
-  ![平台一致性](../Assets/Opencv编译器版本选择.PNG)
+  ![平台一致性](./Assets/Opencv编译器版本选择.PNG)
 ### [cmake](https://cmake.org/)
   - 添加Kinect sdk2的cmake配置文件。将Samples目录下的`FindKInectSDK2.cmake`文件复制到Cmake安装目录下的`share\cmake-3.10\Modules\`文件夹中。例如：`D:\CMAKE\share\cmake-3.10\Modules`。
 
