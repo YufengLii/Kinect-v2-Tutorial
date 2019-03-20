@@ -33,6 +33,7 @@
     2. 在环境变量`Path`中添加opencv `bin`目录，例如：`D:\opencv3.2\build_vc15_x64\install\bin`
 ### [PCL](http://unanancyowen.com/en/)
   可自行编译或下载预编译版本。
+  **注意：**预编译版本需要跟自己电脑的Visual studio版本一致；且不要忘记添加相应的环境变量
 
 
 ## cmake工程配置文件CMakeLists.txt写法
